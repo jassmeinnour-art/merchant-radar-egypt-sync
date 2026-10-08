@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.merchantradar.egypt",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:44:C5:9F:8B:2A:88:51:75:5D:89:D2:C3:48:84:75:A8:77:F1:C9:83:97:F2:77:24:D3:45:95:60:F0"
+      ]
+    }
+  }
+]

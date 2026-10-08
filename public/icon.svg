@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="40%" stop-color="#1E1B4B" />
+      <stop offset="100%" stop-color="#312E81" />
+    </linearGradient>
+
+    <!-- Radar Pulse Wave Gradient -->
+    <radialGradient id="radarSweep" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#6366F1" stop-opacity="0.4" />
+      <stop offset="80%" stop-color="#10B981" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#312E81" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Emerald Winner Gradient -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Rounded Card -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <rect width="504" height="504" x="4" y="4" rx="108" fill="none" stroke="#6366F1" stroke-width="4" stroke-opacity="0.3" />
+
+  <!-- Radar Background Grid / Concentric Rings -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="#38BDF8" stroke-width="2.5" stroke-opacity="0.2" stroke-dasharray="8 6" />
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#6366F1" stroke-width="2.5" stroke-opacity="0.3" />
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#818CF8" stroke-width="2.5" stroke-opacity="0.4" stroke-dasharray="6 4" />
+  <circle cx="256" cy="256" r="50" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-opacity="0.5" />
+
+  <!-- Crosshairs -->
+  <line x1="256" y1="56" x2="256" y2="456" stroke="#818CF8" stroke-width="1.5" stroke-opacity="0.25" stroke-dasharray="6 6" />
+  <line x1="56" y1="256" x2="456" y2="256" stroke="#818CF8" stroke-width="1.5" stroke-opacity="0.25" stroke-dasharray="6 6" />
+
+  <!-- Radar Sweep Beam (Wedge) -->
+  <path d="M 256 256 L 398 114 A 200 200 0 0 0 256 56 Z" fill="url(#radarSweep)" />
+
+  <!-- Radar Ping Dots (Competitors detected on radar) -->
+  <!-- Amazon Ping -->
+  <circle cx="360" cy="190" r="10" fill="#F59E0B" filter="url(#glow)" />
+  <circle cx="360" cy="190" r="18" fill="none" stroke="#F59E0B" stroke-width="2" stroke-opacity="0.6" />
+  <!-- Noon Ping -->
+  <circle cx="160" cy="170" r="8" fill="#FBBF24" filter="url(#glow)" />
+  <!-- Jumia Ping -->
+  <circle cx="340" cy="340" r="9" fill="#10B981" filter="url(#glow)" />
+
+  <!-- Center Merchant Emblem Shield -->
+  <polygon points="256,120 366,180 366,310 256,392 146,310 146,180" fill="#1E1B4B" stroke="url(#goldGrad)" stroke-width="8" filter="url(#glow)" />
+  <polygon points="256,136 350,190 350,300 256,372 162,300 162,190" fill="#2E1065" fill-opacity="0.6" stroke="#4F46E5" stroke-width="3" />
+
+  <!-- Center Store Awning / Crown Motif -->
+  <path d="M 200 210 Q 256 186 312 210 L 312 230 L 200 230 Z" fill="url(#goldGrad)" />
+  <!-- Store Pillars -->
+  <rect x="210" y="235" width="16" height="50" rx="3" fill="#E0E7FF" />
+  <rect x="248" y="235" width="16" height="50" rx="3" fill="#E0E7FF" />
+  <rect x="286" y="235" width="16" height="50" rx="3" fill="#E0E7FF" />
+  <!-- Store Base -->
+  <rect x="195" y="288" width="122" height="10" rx="3" fill="url(#goldGrad)" />
+
+  <!-- Dynamic Lightning Bolt (Winning Reprice Speed) -->
+  <path d="M 264 220 L 236 268 L 260 268 L 244 326 L 284 262 L 258 262 Z" fill="url(#goldGrad)" filter="url(#glow)" />
+
+  <!-- Small Egyptian Star Embellishments -->
+  <circle cx="256" cy="425" r="4" fill="#F59E0B" />
+  <circle cx="236" cy="425" r="3" fill="#FCD34D" />
+  <circle cx="276" cy="425" r="3" fill="#FCD34D" />
+</svg>

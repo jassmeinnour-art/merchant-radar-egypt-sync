@@ -1,0 +1,10 @@
+{
+  "name": "رادار التاجر الذكي | Merchant Radar Egypt",
+  "description": "منصة إدارة وتتبع الأسعار والتسعير الذكي للتجار في السوق المصري مع بوابة تسجيل دخول سحابية منفصلة تماماً، ودعم الربط الآمن مع Firebase وتهيئة النطاقات المصرح بها ومصادقة البريد الإلكتروني وجوجل.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

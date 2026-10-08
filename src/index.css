@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@import "./styles/themes.css";
+
+/* Viewport and Mobile Blowout Prevention (Prevents Horizontal Page Shift) */
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* RTL and Mixed Arabic/Latin Bidi Text Optimization */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+[dir="rtl"] th.text-center,
+[dir="rtl"] td.text-center {
+  text-align: center;
+}
+
+[dir="rtl"] th.text-left,
+[dir="rtl"] td.text-left {
+  text-align: left;
+}
+
+/* Mixed Latin/Arabic codes, dimensions, and numbers isolation */
+.font-mono,
+.ltr-text,
+code,
+input[type="number"],
+input[type="tel"],
+bdi,
+.bidi-isolate {
+  unicode-bidi: isolate;
+}
+
+/* Ensure alphanumeric identifiers, models and codes do not reverse or collide with Arabic punctuation */
+.product-code-badge {
+  direction: ltr;
+  display: inline-block;
+  unicode-bidi: isolate;
+}
+
+/* Smooth custom scrollbars for overflow-x and overflow-y containers */
+.custom-scrollbar::-webkit-scrollbar,
+table::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track,
+table::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb,
+table::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+table::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+/* High Contrast Emerald Action Buttons (أزرار الهوية الزمردية عالية التباين) */
+.btn-emerald-primary {
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.3) !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.btn-emerald-primary:hover {
+  background-color: #10b981 !important;
+  box-shadow: 0 14px 20px -3px rgba(16, 185, 129, 0.4) !important;
+  transform: translateY(-1px);
+}
+.btn-emerald-primary:active {
+  transform: scale(0.97);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-executive-report,
+  #printable-executive-report * {
+    visibility: visible;
+  }
+  #printable-executive-report {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    background: white !important;
+    color: #0f172a !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Category Drag & Drop Visual Feedback Animations */
+@keyframes category-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-3px) rotate(-0.3deg);
+  }
+  40%, 80% {
+    transform: translateX(3px) rotate(0.3deg);
+  }
+}
+
+@keyframes drop-target-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4), 0 4px 12px rgba(99, 102, 241, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.75), 0 8px 24px rgba(99, 102, 241, 0.25);
+  }
+}
+
+@keyframes icon-wiggle {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-12deg) scale(1.18);
+  }
+  75% {
+    transform: rotate(12deg) scale(1.18);
+  }
+}
+
+.animate-category-shake {
+  animation: category-shake 0.45s ease-in-out infinite, drop-target-glow 1.2s ease-in-out infinite;
+}
+
+.animate-icon-wiggle {
+  animation: icon-wiggle 0.4s ease-in-out infinite;
+}
+
+.animate-recently-moved {
+  animation: category-shake 0.5s ease-in-out 1;
+}
+
+/* ==========================================================================
+   Platform Card (كارت المنصة وقنوات البيع) - Visual Contrast, Typography & Hover Shadow
+   ========================================================================== */
+.platform-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle soft shadow on hover for any sales channel platform card */
+.platform-card:hover {
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+/* High visual contrast typography inside Platform Card */
+.platform-card .platform-title {
+  color: #0f172a; /* Slate 900 */
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+/* Specific enhancements for Compact Mode (الوضع المدمج) */
+.platform-card.platform-card-compact,
+.platform-card-compact {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  padding-inline-start: 0.55rem !important;
+  padding-inline-end: 0.55rem !important;
+  gap: 0.35rem !important;
+  line-height: 1.2 !important;
+  border-width: 1px !important;
+}
+
+.platform-card.platform-card-compact .platform-title,
+.platform-card-compact .platform-title {
+  font-size: 0.74rem !important;
+  font-weight: 850 !important;
+  color: #020617 !important; /* Deepest Slate 950 for clear readability on small viewports */
+  white-space: nowrap !important;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.platform-card.platform-card-compact:hover,
+.platform-card-compact:hover {
+  box-shadow: 0 4px 12px -1px rgba(15, 23, 42, 0.14), 0 2px 4px -1px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-1px);
+}
+
