@@ -211,7 +211,7 @@ export const SmartDynamicPricingPanel: React.FC<SmartDynamicPricingPanelProps> =
 
     logUserActivity({
       actionType: 'price_update',
-      title: `تسعير ديناميكي ذكي: ${product.title.slice(0, 35)}`,
+      actionTitle: `تسعير ديناميكي ذكي: ${product.title.slice(0, 35)}`,
       details: `${scenarioLabelAr} | سعر المنافس: ${validCompPrice} ج.م -> سعرك التلقائي: ${nextEval.finalApprovedPrice} ج.م (${nextEval.statusHeadlineAr})`,
       platform: nextEval.competitorPlatformName,
       status: 'success',

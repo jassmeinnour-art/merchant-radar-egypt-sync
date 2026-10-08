@@ -43,10 +43,15 @@ import {
 interface OwnerAiStudioDebuggerWidgetProps {
   activeTab: string;
   activeTabLabel?: string;
+  allProducts?: ProductData[];
+  activeProducts?: ProductData[];
+  archivedProducts?: ProductData[];
   currentProduct: ProductData | null;
   connectedPlatforms: ConnectedMerchantPlatform[];
-  unresolvedSyncErrors: ApiSyncErrorItem[];
-  activeMerchantId: string;
+  watchlist?: unknown[];
+  unresolvedSyncErrors?: ApiSyncErrorItem[];
+  currency?: string;
+  activeMerchantId?: string;
   activeMerchantName?: string;
   onShowToast?: (msg: string) => void;
 }
@@ -55,13 +60,15 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
   activeTab,
   activeTabLabel,
   currentProduct,
-  connectedPlatforms,
-  unresolvedSyncErrors,
+  connectedPlatforms = [],
+  unresolvedSyncErrors = [],
   activeMerchantId,
   activeMerchantName,
   onShowToast,
 }) => {
   const { user, profile, isDbConnected, isOwner } = useAuth();
+  const syncErrors = unresolvedSyncErrors ?? [];
+  const safeConnectedPlatforms = connectedPlatforms ?? [];
 
   // Strict Owner verification: must match jassmeinnour@gmail.com
   const verifiedOwnerEmail = useMemo(() => {
@@ -86,8 +93,8 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
   useEffect(() => {
     if (!verifiedOwnerEmail) return;
 
-    const activeCount = connectedPlatforms.filter((p) => p.isConnected).length;
-    const errPlatCount = connectedPlatforms.filter(
+    const activeCount = safeConnectedPlatforms.filter((p) => p.isConnected).length;
+    const errPlatCount = safeConnectedPlatforms.filter(
       (p) => p.hasSyncError || p.status === 'error' || p.status === 'disconnected' || p.syncError
     ).length;
 
@@ -99,9 +106,9 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
       activeMerchantId,
       activeMerchantName,
       connectedPlatformsCount: activeCount,
-      totalPlatformsCount: connectedPlatforms.length,
+      totalPlatformsCount: safeConnectedPlatforms.length,
       errorPlatformsCount: errPlatCount,
-      unresolvedApiErrorsCount: unresolvedSyncErrors.length,
+      unresolvedApiErrorsCount: syncErrors.length,
       isDbConnected,
       userEmail: OWNER_EMAIL,
       userUid: user?.uid || profile?.uid || 'owner_uid',
@@ -111,8 +118,8 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
     activeTab,
     activeTabLabel,
     currentProduct,
-    connectedPlatforms,
-    unresolvedSyncErrors.length,
+    safeConnectedPlatforms,
+    syncErrors.length,
     activeMerchantId,
     activeMerchantName,
     isDbConnected,
@@ -145,7 +152,7 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
 
   const apiFailuresList = useMemo(() => {
     const fromLogs = debugLogs.filter((l) => l.logType === 'api_failure');
-    const mappedSyncErrors: OwnerDebugLogEntry[] = unresolvedSyncErrors.map((err) => ({
+    const mappedSyncErrors: OwnerDebugLogEntry[] = syncErrors.map((err) => ({
       id: `sync_${err.id}`,
       ownerEmail: OWNER_EMAIL,
       logType: 'api_failure',
@@ -166,14 +173,14 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
     return Array.from(map.values()).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  }, [debugLogs, unresolvedSyncErrors, activeTab]);
+  }, [debugLogs, syncErrors, activeTab]);
 
   const totalAlertsBadgeCount = consoleErrorsList.length + apiFailuresList.length;
 
   // Current Application State Snapshot object
   const currentAppStateDump = useMemo(() => {
-    const activePlatforms = connectedPlatforms.filter((p) => p.isConnected);
-    const errorPlatforms = connectedPlatforms.filter(
+    const activePlatforms = safeConnectedPlatforms.filter((p) => p.isConnected);
+    const errorPlatforms = safeConnectedPlatforms.filter(
       (p) => p.hasSyncError || p.status === 'error' || p.status === 'disconnected' || p.syncError
     );
 
@@ -202,11 +209,11 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
       platformsAndSyncState: {
         activeMerchantId,
         activeMerchantName: activeMerchantName || 'المتجر الرئيسي',
-        totalPlatforms: connectedPlatforms.length,
+        totalPlatforms: safeConnectedPlatforms.length,
         connectedPlatformsCount: activePlatforms.length,
         platformsWithErrorsCount: errorPlatforms.length,
         errorPlatformNames: errorPlatforms.map((p) => p.name),
-        unresolvedApiSyncErrorsCount: unresolvedSyncErrors.length,
+        unresolvedApiSyncErrorsCount: syncErrors.length,
       },
       environmentAndDatabase: {
         firestoreConnected: isDbConnected,
@@ -227,8 +234,8 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
     currentProduct,
     activeMerchantId,
     activeMerchantName,
-    connectedPlatforms,
-    unresolvedSyncErrors.length,
+    safeConnectedPlatforms,
+    syncErrors.length,
     isDbConnected,
   ]);
 
@@ -236,11 +243,11 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
   const generatedAiStudioReportText = useMemo(() => {
     return generateAiStudioDebugPrompt({
       logs: [...debugLogs, ...apiFailuresList.filter((a) => a.id.startsWith('sync_'))],
-      apiErrorsCount: unresolvedSyncErrors.length,
+      apiErrorsCount: syncErrors.length,
       selectedLog: selectedLogForReport,
       customOwnerNote: customOwnerNote.trim() || undefined,
     });
-  }, [debugLogs, apiFailuresList, unresolvedSyncErrors.length, selectedLogForReport, customOwnerNote]);
+  }, [debugLogs, apiFailuresList, syncErrors.length, selectedLogForReport, customOwnerNote]);
 
   // STRICT DOM ACCESS CONTROL: Completely remove from DOM tree for any non-owner user or merchant
   if (!verifiedOwnerEmail) {
@@ -767,8 +774,8 @@ export const OwnerAiStudioDebuggerWidget: React.FC<OwnerAiStudioDebuggerWidgetPr
                       <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
                         <div className="text-[10px] text-slate-400">قنوات البيع المتصلة</div>
                         <div className="text-xs font-black text-white mt-0.5">
-                          {connectedPlatforms.filter((p) => p.isConnected).length} /{' '}
-                          {connectedPlatforms.length} منصة
+                          {safeConnectedPlatforms.filter((p) => p.isConnected).length} /{' '}
+                          {safeConnectedPlatforms.length} منصة
                         </div>
                       </div>
                     </div>

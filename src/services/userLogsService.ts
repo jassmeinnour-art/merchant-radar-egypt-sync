@@ -43,7 +43,8 @@ export function saveLocalCachedUserLogs(logs: UserActivityLog[]): void {
 
 export interface LogUserActivityInput {
   actionType: UserActionType;
-  actionTitle: string;
+  actionTitle?: string;
+  title?: string;
   details: string;
   platform?: string;
   status?: UserActionSeverity;
@@ -60,6 +61,7 @@ export async function logUserActivity(input: LogUserActivityInput): Promise<User
   const currentUid = input.userId || auth.currentUser?.uid || 'guest-merchant';
   const email = input.userEmail || auth.currentUser?.email || 'guest@radar.eg';
   const name = input.userName || auth.currentUser?.displayName || 'تاجر رادار مصر';
+  const actionTitle = input.actionTitle ?? input.title ?? 'إجراء مستخدم';
 
   const logId = `act-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
   const nowIso = new Date().toISOString();
@@ -70,7 +72,7 @@ export async function logUserActivity(input: LogUserActivityInput): Promise<User
     userEmail: email,
     userName: name,
     actionType: input.actionType,
-    actionTitle: input.actionTitle,
+    actionTitle,
     details: input.details,
     platform: input.platform || 'web',
     deviceInfo: typeof navigator !== 'undefined' ? `${navigator.userAgent.slice(0, 60)}` : 'Client Web',

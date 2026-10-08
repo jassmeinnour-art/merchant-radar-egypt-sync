@@ -8875,8 +8875,10 @@ export default function App() {
         currentProduct={currentProduct}
         connectedPlatforms={connectedPlatforms}
         watchlist={watchlist}
-        unresolvedApiErrors={unresolvedSyncErrors}
+        unresolvedSyncErrors={unresolvedSyncErrors}
         currency={currency}
+        activeMerchantId={activeMerchantId}
+        activeMerchantName={remoteMerchantsList.find((merchant) => merchant.id === activeMerchantId)?.storeName}
         onShowToast={showToast}
       />
 

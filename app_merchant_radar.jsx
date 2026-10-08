@@ -703,7 +703,7 @@ export default function AppMerchantRadar() {
     setStagedImportData(null);
 
     const files = event.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || (files?.length || 0) === 0) return;
 
     const file = files[0];
     // Reset input value so same file can be re-selected if needed
@@ -915,7 +915,7 @@ export default function AppMerchantRadar() {
             'المخزون': 12
           }
         ];
-        const ws = XLSX.utils.json_to_sheet(sampleRows);
+      const ws = XLSX.utils.json_to_sheet(sampleRows);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'المنتجات والأسعار');
         XLSX.writeFile(wb, 'نموذج_إكسيل_منتجات_رادار_التاجر.xlsx');
