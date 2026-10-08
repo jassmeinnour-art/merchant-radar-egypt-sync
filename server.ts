@@ -2642,12 +2642,19 @@ interface FetchOrdersOptions {
   dataMode?: 'live' | 'demo';
 }
 
+function normalizeOptionalString(value: string | undefined): string | undefined {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+}
+
 async function fetchAmazonSpApiOrders(options: FetchOrdersOptions = {}): Promise<{ orders: any[]; totalCount: number; dataMode: string }> {
-  const {
-    merchantId = 'merchant-default',
-    merchantName = 'المتجر النشط',
-    dataMode = 'live'
-  } = options;
+  const merchantId = normalizeOptionalString(options.merchantId) || 'merchant-default';
+  const merchantName = normalizeOptionalString(options.merchantName) || 'المتجر النشط';
+  const dataMode = options.dataMode === 'demo' ? 'demo' : 'live';
 
   // Sandbox demo preview mode
   if (dataMode === 'demo') {
@@ -2659,18 +2666,18 @@ async function fetchAmazonSpApiOrders(options: FetchOrdersOptions = {}): Promise
     };
   }
 
-  const clientId = (options.clientId || process.env.AMAZON_CLIENT_ID || '').trim();
-  const clientSecret = (options.clientSecret || process.env.AMAZON_CLIENT_SECRET || '').trim();
-  const refreshToken = (options.refreshToken || process.env.AMAZON_REFRESH_TOKEN || '').trim();
+  const clientId = normalizeOptionalString(options.clientId || process.env.AMAZON_CLIENT_ID) || '';
+  const clientSecret = normalizeOptionalString(options.clientSecret || process.env.AMAZON_CLIENT_SECRET) || '';
+  const refreshToken = normalizeOptionalString(options.refreshToken || process.env.AMAZON_REFRESH_TOKEN) || '';
 
   if (!clientId || !clientSecret || !refreshToken) {
     throw new Error(`يرجى ضبط مفاتيح Amazon SP-API للتاجر "${merchantName}" في إعدادات المنصات أو Vercel`);
   }
 
-  const region = (options.region || process.env.AMAZON_REGION || 'eu-west-1').toLowerCase();
-  const endpoint = region === 'us-east-1'
+  const region = normalizeOptionalString(options.region || process.env.AMAZON_REGION) || 'eu-west-1';
+  const endpoint = region.toLowerCase() === 'us-east-1'
     ? 'https://sellingpartnerapi-na.amazon.com'
-    : region === 'us-west-2'
+    : region.toLowerCase() === 'us-west-2'
     ? 'https://sellingpartnerapi-fe.amazon.com'
     : 'https://sellingpartnerapi-eu.amazon.com';
 
@@ -2696,7 +2703,7 @@ async function fetchAmazonSpApiOrders(options: FetchOrdersOptions = {}): Promise
   }
 
   const ordersPayload = await ordersRes.json() as any;
-  const rawOrders = ordersPayload?.payload?.Orders || [];
+  const rawOrders = Array.isArray(ordersPayload?.payload?.Orders) ? ordersPayload.payload.Orders : [];
 
   // Map each order strictly conforming to authentic Amazon Seller Central fields
   const mappedOrders = await Promise.all(
