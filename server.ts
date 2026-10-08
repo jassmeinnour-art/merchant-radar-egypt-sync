@@ -4,6 +4,7 @@ import path from 'path';
 import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
+import { SalesAggregatorService } from './src/services/SalesAggregatorService';
 
 dotenv.config();
 
@@ -78,6 +79,34 @@ async function generateWithGeminiFallback(options: GeminiFallbackOptions): Promi
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString(), region: 'Egypt (EGP)' });
+});
+
+app.get('/api/v1/recommendations/top-selling', async (req, res) => {
+  const category = typeof req.query.category === 'string' ? req.query.category : 'all';
+  const requestedLimit = Number(req.query.limit ?? 10);
+  const safeLimit = Number.isFinite(requestedLimit) && requestedLimit > 0 ? Math.max(1, Math.floor(requestedLimit)) : 10;
+
+  const result = SalesAggregatorService.aggregateTopSellers(safeLimit);
+
+  if (!result.success) {
+    return res.status(404).json({
+      success: false,
+      category,
+      message: result.message,
+      total: 0,
+      generatedAt: result.generatedAt,
+      data: [],
+    });
+  }
+
+  res.json({
+    success: true,
+    category,
+    total: result.total,
+    generatedAt: result.generatedAt,
+    data: result.data,
+    message: result.message,
+  });
 });
 
 // Server Boot Time & Live App Version Check Endpoint (Live/PWA Update Mechanism)
