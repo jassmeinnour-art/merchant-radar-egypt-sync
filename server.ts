@@ -89,7 +89,7 @@ app.get('/api/v1/recommendations/top-selling', async (req, res) => {
   const result = SalesAggregatorService.aggregateTopSellers(safeLimit);
 
   if (!result.success) {
-    return res.status(404).json({
+    return res.status(200).json({
       success: false,
       category,
       message: result.message,
