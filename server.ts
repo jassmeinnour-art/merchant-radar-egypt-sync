@@ -9,8 +9,7 @@ import { SalesAggregatorService } from './src/services/SalesAggregatorService';
 dotenv.config();
 
 const app = express();
-const DEFAULT_PORT = Number(process.env.PORT) || 3000;
-const MAX_PORT_ATTEMPTS = 20;
+const PORT = 3000;
 
 // Middleware for parsing JSON with generous payload size for camera image uploads
 app.use(express.json({ limit: '30mb' }));
@@ -90,7 +89,7 @@ app.get('/api/v1/recommendations/top-selling', async (req, res) => {
   const result = SalesAggregatorService.aggregateTopSellers(safeLimit);
 
   if (!result.success) {
-    return res.status(200).json({
+    return res.status(404).json({
       success: false,
       category,
       message: result.message,
@@ -3451,7 +3450,7 @@ async function startServer() {
 
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: {
+      server: { 
         middlewareMode: true,
         hmr: false,
         watch: null,
@@ -3467,24 +3466,9 @@ async function startServer() {
     });
   }
 
-  const tryListen = (port: number, attemptsLeft: number) => {
-    server.once('error', (error: NodeJS.ErrnoException) => {
-      if (error.code === 'EADDRINUSE' && attemptsLeft > 0) {
-        const nextPort = port + 1;
-        console.warn(`Port ${port} is busy. Retrying on ${nextPort}...`);
-        tryListen(nextPort, attemptsLeft - 1);
-        return;
-      }
-
-      throw error;
-    });
-
-    server.listen(port, '0.0.0.0', () => {
-      console.log(`Merchant Radar Server running on http://0.0.0.0:${port}`);
-    });
-  };
-
-  tryListen(DEFAULT_PORT, MAX_PORT_ATTEMPTS);
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Merchant Radar Server running on http://0.0.0.0:${PORT}`);
+  });
 }
 
 startServer();
